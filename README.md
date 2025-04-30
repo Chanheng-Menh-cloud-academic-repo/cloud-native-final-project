@@ -237,4 +237,3 @@ Each service uses the following environment variables:
 # cloud-native-final-project
 ```
 
-Let me know if you’d like this saved to a file or converted into a downloadable ZIP package with your Kubernetes YAMLs, Dockerfiles, and this README.
