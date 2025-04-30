@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: update-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: update-service
+  template:
+    metadata:
+      labels:
+        app: update-service
+    spec:
+      containers:
+        - name: update-service
+          image: chanhengmenh/update-service:latest
+          ports:
+            - containerPort: 5003
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5003
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5003
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: student-management-config
+                  key: MONGO_URI
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: student-management-config
+                  key: UPDATE_SERVICE_PORT            
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: update-service
+spec:
+  selector:
+    app: update-service
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 5003        
+      targetPort: 5003   
+      nodePort: 30003    

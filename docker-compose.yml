@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - microservices-network
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - K8S=false
+      - DOCKER=true
+    depends_on:
+      - add-service
+      - delete-service
+      - update-service
+      - search-service
+    networks:
+      - microservices-network
+
+  add-service:
+    build: ./add-service
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - MONGO_URI=mongodb://mongodb:27017/student-management
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+  delete-service:
+    build: ./delete-service
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - MONGO_URI=mongodb://mongodb:27017/student-management
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+  update-service:
+    build: ./update-service
+    ports:
+      - "5003:5003"
+    environment:
+      - PORT=5003
+      - MONGO_URI=mongodb://mongodb:27017/student-management
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+  search-service:
+    build: ./search-service
+    ports:
+      - "5004:5004"
+    environment:
+      - PORT=5004
+      - MONGO_URI=mongodb://mongodb:27017/student-management
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  mongodb_data: 
