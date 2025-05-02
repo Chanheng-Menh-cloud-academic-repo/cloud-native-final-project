@@ -1,6 +1,4 @@
-Here is the fully updated and cleanly formatted version of your `README.md` file:
-
----
+Here is the correct syntax for your GitHub `README.md` file:
 
 ```markdown
 # Student Management System
@@ -111,10 +109,10 @@ Then access the API at: `http://localhost:8080`
   Body:
   ```json
   {
-    "Name": "John Doe",
-    "Age": 20,
-    "Class": "Computer Science",
-    "ID": "CS001"
+    "Name": "Goat Sheep",
+    "Age": 19,
+    "Class": "Cloud Operations",
+    "ID": "sdk"
   }
   ```
 
@@ -125,12 +123,10 @@ Then access the API at: `http://localhost:8080`
   ```json
   {
     "students": [
-      {
-        "Name": "Jane Smith",
-        "Age": 21,
-        "Class": "Computer Science",
-        "ID": "CS002"
-      }
+      { "Name": "Edersoan Moraase", "Age": 19, "Class": "Cloud Native Development", "ID": "115" },
+      { "Name": "Erligg Haalaand", "Age": 19, "Class": "Cloud Native Development", "ID": "116" },
+      { "Name": "Davidd Silva", "Age": 19, "Class": "Cloud Native Development", "ID": "113" },
+      { "Name": "Kylee Walker", "Age": 19, "Class": "Cloud Native Development", "ID": "114" }
     ]
   }
   ```
@@ -177,7 +173,7 @@ Then access the API at: `http://localhost:8080`
   Body:
   ```json
   {
-    "ids": ["CS001", "CS002"]
+    "ids": ["114", "113", "115", "116"]
   }
   ```
 
@@ -235,5 +231,5 @@ Each service uses the following environment variables:
 ---
 
 # cloud-native-final-project
-```
+
 
