@@ -1,9 +1,0 @@
-# Ignore Docker-related files
-Dockerfile
-.dockerignore
-
-# Ignore git files
-.git/
-
-# Ignore node_modules, as they will be installed during the Docker build process
-node_modules/
