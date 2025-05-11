@@ -4,7 +4,12 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm start --prefix add-service\" \"npm start --prefix delete-service\" \"npm start --prefix update-service\" \"npm start --prefix search-service\" \"npm start --prefix api-gateway\"",
-    "test": "jest"
+    "test": "jest --coverage --verbose",  // Run all tests across services
+    "test:add-service": "jest add-service/__tests__/*.test.js",  // Test add-service files in the add-service directory
+    "test:delete-service": "jest delete-service/__tests__/*.test.js",  // Test delete-service files in the delete-service directory
+    "test:update-service": "jest update-service/__tests__/*.test.js",  // Test update-service files in the update-service directory
+    "test:search-service": "jest search-service/__tests__/*.test.js",  // Test search-service files in the search-service directory
+    "test:api-gateway": "jest api-gateway/__tests__/*.test.js"   // Test api-gateway files in the api-gateway directory
   },
   "keywords": [],
   "author": "",
