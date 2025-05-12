@@ -6,6 +6,7 @@ on:
       - main
 
 jobs:
+  # Step 1: Build and push Docker images
   build-and-push:
     runs-on: ubuntu-latest
     strategy:
@@ -30,7 +31,9 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.service }}
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest
 
+  # Step 2: Run unit tests after Docker builds
   run-unit-tests:
+    needs: build-and-push
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -49,4 +52,4 @@ jobs:
         working-directory: ${{ matrix.service }}
         run: |
           npm install
-          npx jest --runInBand
+          npx jest --ci --runInBand
