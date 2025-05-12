@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [add-service, delete-service, update-service, search-service, api-gateway]
+        service: [add-service, delete-service, update-service, search-service]
 
     steps:
       - name: Checkout repository
