@@ -1,8 +1,10 @@
-import request from 'supertest';
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import express from 'express';
-import dotenv from 'dotenv';
+// deleteService.test.js
+
+const request = require('supertest');
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const express = require('express');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -13,7 +15,6 @@ let Student;
 beforeAll(async () => {
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
-
   await mongoose.connect(uri);
 
   const studentSchema = new mongoose.Schema(
@@ -37,13 +38,11 @@ beforeAll(async () => {
 
   app.delete('/delete/:id', async (req, res) => {
     const studentId = req.params.id;
-
     try {
       const deletedStudent = await Student.findByIdAndDelete(studentId);
       if (!deletedStudent) {
         return res.status(404).json({ message: `Student with ID ${studentId} not found.` });
       }
-
       return res.status(200).json({ message: `Student with ID ${studentId} deleted.` });
     } catch (error) {
       return res.status(500).json({ message: 'Error deleting student', error });

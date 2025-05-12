@@ -1,70 +1,53 @@
-name: CI/CD Pipeline for Student Management System
+  name: CI/CD Pipeline for Student Management System
 
-on:
-  push:
-    branches:
-      - main
+  on:
+    push:
+      branches:
+        - main
 
-jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [api-gateway, add-service, delete-service, update-service, search-service]
+  jobs:
+    build-and-push:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          service: [api-gateway, add-service, delete-service, update-service, search-service]
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+        - name: Set up Docker
+          uses: docker/setup-buildx-action@v2
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+        - name: Log in to Docker Hub
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.service }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest
+        - name: Build and push Docker image
+          run: |
+            docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest ./${{ matrix.service }}
+            docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest
 
-  run-unit-tests:
-    runs-on: ubuntu-latest
+    run-unit-tests:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          service: [add-service, delete-service, update-service, search-service, api-gateway]
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+        - name: Set up Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '22'
 
-      - name: Install dependencies
-        run: npm install
+        - name: Install dependencies and run tests
+          working-directory: ${{ matrix.service }}
+          run: |
+            npm install
+            npx jest
 
-      - name: Run tests for all services
-        run: npm test  # Runs the 'test' script defined in package.json for all services
-
-  test-services:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [add-service, delete-service, update-service, search-service, api-gateway]
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run specific service tests
-        run: npm run test:${{ matrix.service }}  # Run specific tests for each service

@@ -1,16 +1,19 @@
-import request from 'supertest';
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import express from 'express';
+const request = require('supertest');
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const express = require('express');
 
 let app, mongod, Student;
 
 beforeAll(async () => {
+  // Initialize MongoMemoryServer to simulate MongoDB in memory
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
 
+  // Connect to the in-memory MongoDB without deprecated options
   await mongoose.connect(uri);
 
+  // Define the Student schema
   const studentSchema = new mongoose.Schema(
     {
       _id: { type: String, required: true },
@@ -20,8 +23,11 @@ beforeAll(async () => {
     },
     { _id: false }
   );
+
+  // Create the Student model
   Student = mongoose.model('Student', studentSchema);
 
+  // Initialize the express app
   app = express();
   app.use(express.json());
 
@@ -30,7 +36,7 @@ beforeAll(async () => {
     res.status(200).json({ status: 'ok', service: 'update-service' });
   });
 
-  // Update route
+  // Update student route
   app.put('/update/:id', async (req, res) => {
     try {
       const { Name, Age, Class } = req.body;
@@ -69,13 +75,15 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // Disconnect from MongoDB and stop MongoMemoryServer after tests are completed
   await mongoose.disconnect();
   await mongod.stop();
 });
 
 describe('Update Service API', () => {
   beforeEach(async () => {
-    await Student.deleteMany(); // Clear collection
+    // Clear any previous data and add a new student before each test
+    await Student.deleteMany();
     await Student.create({ _id: 'S001', name: 'Alice', age: 20, class: 'A1' });
   });
 

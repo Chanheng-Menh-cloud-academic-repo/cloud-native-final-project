@@ -8,15 +8,16 @@ dotenv.config();
 
 let mongod;
 let app;
-let server;
+let Student;
 
 // Recreate the app setup (like your index.js)
 beforeAll(async () => {
+  // Setup MongoMemoryServer and connect mongoose
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
-
   await mongoose.connect(uri);
 
+  // Define schema
   const studentSchema = new mongoose.Schema(
     {
       _id: { type: String, required: true },
@@ -26,15 +27,18 @@ beforeAll(async () => {
     },
     { _id: false }
   );
-  const Student = mongoose.model('Student', studentSchema);
+  Student = mongoose.model('Student', studentSchema);
 
+  // Setup Express app
   app = express();
   app.use(express.json());
 
+  // Health check route
   app.get('/', (req, res) => {
     res.status(200).json({ status: 'ok', service: 'add-service' });
   });
 
+  // Add student route
   app.post('/add', async (req, res) => {
     try {
       const { Name, Age, Class, ID } = req.body;
@@ -60,6 +64,7 @@ beforeAll(async () => {
     }
   });
 
+  // Add multiple students route
   app.post('/adds', async (req, res) => {
     try {
       const students = req.body.students;
