@@ -92,7 +92,7 @@ app.post('/adds', async (req, res) => {
       }
   
       return res.status(201).json({
-        message: `User B makes changes here${addedCount} student${addedCount !== 1 ? 's' : ''} added successful!${skippedCount > 0 ? ` ${skippedCount} student${skippedCount !== 1 ? 's' : ''} already existed.` : ''}`,
+        message: `${addedCount} student${addedCount !== 1 ? 's' : ''} added successful!${skippedCount > 0 ? ` ${skippedCount} student${skippedCount !== 1 ? 's' : ''} already existed.` : ''}`,
       });
     } catch (err) {
       return res.status(500).json({ message: "Error processing batch add", error: err });
